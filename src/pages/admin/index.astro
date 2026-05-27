@@ -1,0 +1,73 @@
+---
+import { jwtVerify } from 'jose';
+import SEO from '../../components/SEO.astro';
+import '../../styles/global.css';
+
+// Server-side authentication check
+const sessionCookie = Astro.cookies.get('admin_session');
+
+if (!sessionCookie) {
+  return Astro.redirect('/admin/login');
+}
+
+try {
+  const jwtSecret = import.meta.env.JWT_SECRET || 'fallback_secret_for_dev_only';
+  const secret = new TextEncoder().encode(jwtSecret);
+  await jwtVerify(sessionCookie.value, secret);
+} catch (err) {
+  // Invalid or expired session
+  Astro.cookies.delete('admin_session', { path: '/' });
+  return Astro.redirect('/admin/login');
+}
+---
+
+<html lang="en">
+	<head>
+		<SEO 
+			title="Dashboard | AutcustDev"
+			description="Admin Dashboard"
+			noindex={true}
+		/>
+	</head>
+	<body>
+		<main class="container admin-layout">
+			<aside class="glass-panel" style="padding: 1.5rem;">
+				<h2 style="font-size: 1.5rem; margin-bottom: 2rem;">Admin Panel</h2>
+				<nav class="admin-sidebar">
+					<a href="/admin" class="admin-nav-link active">Dashboard</a>
+					<a href="/admin/policies" class="admin-nav-link">Manage Policies</a>
+					<a href="/admin/settings" class="admin-nav-link">Settings</a>
+				</nav>
+				
+				<div style="margin-top: auto; padding-top: 2rem;">
+					<form action="/api/auth/logout" method="POST">
+						<button type="submit" class="admin-nav-link" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer; color: #ef4444;">Logout</button>
+					</form>
+				</div>
+			</aside>
+			
+			<div class="content">
+				<div class="glass-panel mb-4">
+					<h1 style="font-size: 2rem; margin-bottom: 0;">Welcome Back</h1>
+					<p style="margin-bottom: 0;">Here's an overview of your platform.</p>
+				</div>
+
+				<div class="dashboard-grid">
+					<div class="glass-panel stat-card">
+						<p class="text-sm" style="margin: 0;">Total Views (30d)</p>
+						<div class="stat-value">12,450</div>
+						<p class="text-sm" style="color: #10b981; margin: 0;">&uarr; 14%</p>
+					</div>
+					<div class="glass-panel stat-card">
+						<p class="text-sm" style="margin: 0;">Active Policies</p>
+						<div class="stat-value">4</div>
+					</div>
+					<div class="glass-panel stat-card">
+						<p class="text-sm" style="margin: 0;">Server Status</p>
+						<div class="stat-value" style="color: #10b981;">Online</div>
+					</div>
+				</div>
+			</div>
+		</main>
+	</body>
+</html>

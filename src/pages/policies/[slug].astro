@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import SEO from '../../components/SEO.astro';
 import '../../styles/global.css';
 
 export async function getStaticPaths() {
@@ -15,20 +16,11 @@ const { Content } = await render(entry);
 
 <html lang="en">
 	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<title>{entry.data.title} | AutcustDev</title>
-		
-		<!-- SEO -->
-		<meta name="description" content={`Read the ${entry.data.title} for AutcustDev.`} />
-		<meta property="og:title" content={`${entry.data.title} | AutcustDev`} />
-		<meta property="og:description" content={`Read the ${entry.data.title} for AutcustDev.`} />
-		<meta property="og:type" content="article" />
-		<meta name="twitter:card" content="summary" />
-		<meta name="twitter:title" content={`${entry.data.title} | AutcustDev`} />
-		<meta name="twitter:description" content={`Read the ${entry.data.title} for AutcustDev.`} />
+		<SEO 
+			title={`${entry.data.title} | AutcustDev`}
+			description={`Read the ${entry.data.title} for AutcustDev.`}
+			type="article"
+		/>
 
 		<!-- Analytics -->
 		<script defer src="/_vercel/insights/script.js"></script>
