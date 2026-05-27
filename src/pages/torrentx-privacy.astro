@@ -8,15 +8,15 @@
         @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
 
         :root {
-            --bg: #0a0a0c;
-            --bg-gradient: radial-gradient(circle at top right, #1f1f33 0%, #0a0a0c 100%), radial-gradient(circle at bottom left, #120e21 0%, #0a0a0c 100%);
-            --surface: rgba(255, 255, 255, 0.03);
-            --surface-hover: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.08);
-            --text: #fcfcfc;
-            --text-muted: #a1a1aa;
-            --accent: #8b5cf6;
-            --accent-secondary: #d946ef;
+            --bg: #000000;
+            --bg-gradient: none;
+            --surface: rgba(255, 255, 255, 0.05);
+            --surface-hover: rgba(255, 255, 255, 0.1);
+            --border: rgba(244, 240, 230, 0.2);
+            --text: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --accent: #f4f0e6;
+            --accent-secondary: #ffffff;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -64,7 +64,7 @@
             border: 3px solid rgba(255,255,255,0.1);
             border-radius: 50%;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+            box-shadow: 0 0 20px rgba(244, 240, 230, 0.3);
         }
 
         .logo img {
@@ -76,7 +76,7 @@
         h1 {
             font-size: 38px;
             font-weight: 600;
-            background: linear-gradient(135deg, #ffffff 0%, #d4d4d8 100%);
+            background: linear-gradient(135deg, #ffffff 0%, var(--accent) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
@@ -117,7 +117,7 @@
             stroke: var(--accent);
             fill: none;
             stroke-width: 2.2;
-            filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.4));
+            filter: drop-shadow(0 0 8px rgba(244, 240, 230, 0.4));
         }
 
         p, li {
@@ -140,7 +140,7 @@
         }
 
         .highlight {
-            background: rgba(139, 92, 246, 0.05);
+            background: rgba(244, 240, 230, 0.05);
             padding: 28px;
             border-radius: 16px;
             border-left: 4px solid var(--accent);
