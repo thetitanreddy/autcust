@@ -1,16 +1,18 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getEntry, render } from 'astro:content';
 import SEO from '../../components/SEO.astro';
 import '../../styles/global.css';
 
-export async function getStaticPaths() {
-  const policyEntries = await getCollection('policies');
-  return policyEntries.map(entry => ({
-    params: { slug: entry.id }, props: { entry },
-  }));
+const { slug } = Astro.params;
+if (!slug) {
+	return Astro.redirect('/404');
 }
 
-const { entry } = Astro.props;
+const entry = await getEntry('policies', slug);
+if (!entry) {
+	return Astro.redirect('/404');
+}
+
 const { Content } = await render(entry);
 ---
 
