@@ -1,0 +1,18 @@
+backend:
+  name: github
+  repo: your-username/autcustdev-portfolio # Replace with your GitHub repository
+  branch: main # Branch to update
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "policies"
+    label: "Policies"
+    folder: "src/content/policies"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Body", name: "body", widget: "markdown"}
