@@ -3,6 +3,7 @@ export const prerender = false;
 import type { APIRoute } from 'astro';
 import { SignJWT } from 'jose';
 import { db } from '../../../lib/firebase';
+import { hashString } from '../../../lib/auth';
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
@@ -54,7 +55,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       const jwtSecret = import.meta.env.JWT_SECRET || 'fallback_secret_for_dev_only';
       const secret = new TextEncoder().encode(jwtSecret);
 
-      const sessionJwt = await new SignJWT({ admin: true })
+      const userAgent = request.headers.get('user-agent') || 'unknown';
+      const fingerprint = await hashString(userAgent);
+
+      const sessionJwt = await new SignJWT({ admin: true, fingerprint })
         .setProtectedHeader({ alg: 'HS256' })
         .setExpirationTime('24h')
         .sign(secret);
@@ -63,7 +67,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         path: '/',
         httpOnly: true,
         secure: import.meta.env.PROD,
-        sameSite: 'lax',
+        sameSite: 'strict',
         maxAge: 60 * 60 * 24, // 24 hours
       });
 

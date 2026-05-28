@@ -3,7 +3,7 @@ import { verifyAdminSession } from '../../../lib/auth';
 import { db } from '../../../lib/firebase';
 
 export const POST: APIRoute = async ({ request, cookies }) => {
-  const isAuthenticated = await verifyAdminSession(cookies);
+  const isAuthenticated = await verifyAdminSession(request, cookies);
   if (!isAuthenticated) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }

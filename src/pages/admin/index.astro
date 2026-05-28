@@ -1,22 +1,13 @@
 ---
-import { jwtVerify } from 'jose';
+import { verifyAdminSession } from '../../lib/auth';
 import SEO from '../../components/SEO.astro';
 import '../../styles/global.css';
 import { db } from '../../lib/firebase';
 
 // Server-side authentication check
-const sessionCookie = Astro.cookies.get('admin_session');
+const isAuthenticated = await verifyAdminSession(Astro.request, Astro.cookies);
 
-if (!sessionCookie) {
-  return Astro.redirect('/admin/login');
-}
-
-try {
-  const jwtSecret = import.meta.env.JWT_SECRET || 'fallback_secret_for_dev_only';
-  const secret = new TextEncoder().encode(jwtSecret);
-  await jwtVerify(sessionCookie.value, secret);
-} catch (err) {
-  // Invalid or expired session
+if (!isAuthenticated) {
   Astro.cookies.delete('admin_session', { path: '/' });
   return Astro.redirect('/admin/login');
 }
