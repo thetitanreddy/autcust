@@ -4,22 +4,15 @@ import type { APIRoute } from 'astro';
 import { SignJWT } from 'jose';
 import nodemailer from 'nodemailer';
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ cookies }) => {
   try {
-    const data = await request.json();
-    const email = data.email;
-
     const adminEmail = import.meta.env.ADMIN_EMAIL;
     const jwtSecret = import.meta.env.JWT_SECRET || 'fallback_secret_for_dev_only';
     
     if (!adminEmail) {
       console.warn("ADMIN_EMAIL is not set in environment variables.");
-    }
-
-    // Only allow the specific admin email
-    if (email !== adminEmail) {
-      return new Response(JSON.stringify({ error: 'Unauthorized email' }), { 
-        status: 401,
+      return new Response(JSON.stringify({ error: 'Server configuration error' }), { 
+        status: 500,
         headers: { 'Content-Type': 'application/json' }
       });
     }
@@ -42,7 +35,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
       await transporter.sendMail({
         from: `"Admin Dashboard" <${import.meta.env.SMTP_USER}>`,
-        to: email,
+        to: adminEmail,
         subject: 'Your Admin Dashboard OTP',
         text: `Your one-time password is: ${otp}. It will expire in 5 minutes.`,
         html: `<p>Your one-time password is: <strong>${otp}</strong></p><p>It will expire in 5 minutes.</p>`,
@@ -50,7 +43,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     } else {
       // Fallback for development/testing if SMTP is not configured
       console.log('====================================');
-      console.log(`DEVELOPMENT MODE - OTP for ${email}: ${otp}`);
+      console.log(`DEVELOPMENT MODE - OTP for ${adminEmail}: ${otp}`);
       console.log('====================================');
     }
 
