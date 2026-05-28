@@ -194,6 +194,49 @@ a:hover {
   width: 100%;
 }
 
+.site-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border-color);
+  background: var(--glass-bg);
+  padding: 3rem 0 1rem;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.footer-heading {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--text-main);
+}
+
+.footer-links a {
+  color: var(--text-muted);
+}
+
+.footer-links a:hover {
+  color: var(--accent-primary);
+}
+
+.footer-bottom p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
 /* Lists */
 .policy-list {
   list-style: none;
