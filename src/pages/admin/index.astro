@@ -154,10 +154,12 @@ try {
 				const headline = document.getElementById('headline').value;
 				const description = document.getElementById('description').value;
 				
-				const btn = homeForm.querySelector('button');
-				const ogText = btn!.innerText;
-				btn!.innerText = 'Saving...';
-				btn!.disabled = true;
+				const btn = homeForm.querySelector('button[type="submit"]');
+				const ogText = btn ? btn.innerText : '';
+				if (btn) {
+					btn.innerText = 'Saving...';
+					btn.disabled = true;
+				}
 
 				try {
 					const res = await fetch('/api/admin/update-home', {
@@ -167,20 +169,30 @@ try {
 					});
 
 					if (res.ok) {
-						homeMsg!.innerText = 'Changes saved successfully!';
-						homeMsg!.style.color = '#48bb78';
+						if (homeMsg) {
+							homeMsg.innerText = 'Changes saved successfully!';
+							homeMsg.style.color = '#48bb78';
+						}
 					} else {
-						homeMsg!.innerText = 'Failed to save changes.';
-						homeMsg!.style.color = '#e53e3e';
+						if (homeMsg) {
+							homeMsg.innerText = 'Failed to save changes.';
+							homeMsg.style.color = '#e53e3e';
+						}
 					}
 				} catch (err) {
-					homeMsg!.innerText = 'Network error.';
-					homeMsg!.style.color = '#e53e3e';
+					if (homeMsg) {
+						homeMsg.innerText = 'Network error.';
+						homeMsg.style.color = '#e53e3e';
+					}
 				} finally {
-					homeMsg!.style.display = 'block';
-					btn!.innerText = ogText;
-					btn!.disabled = false;
-					setTimeout(() => { homeMsg!.style.display = 'none'; }, 3000);
+					if (homeMsg) {
+						homeMsg.style.display = 'block';
+						setTimeout(() => { homeMsg.style.display = 'none'; }, 3000);
+					}
+					if (btn) {
+						btn.innerText = ogText;
+						btn.disabled = false;
+					}
 				}
 			});
 		</script>
