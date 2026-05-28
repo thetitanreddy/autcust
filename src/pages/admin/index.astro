@@ -23,7 +23,6 @@ try {
 
 // Fetch home content from Firestore
 let homeHtml = '';
-let appLinks: any[] = [];
 
 try {
 	const doc = await db.collection('site_content').doc('home').get();
@@ -34,7 +33,6 @@ try {
 		} else if (data?.headline || data?.description) {
 			homeHtml = `<h1 style="font-size: 3.5rem; margin-bottom: 1.5rem;">${data?.headline || ''}</h1>\n<p style="color: var(--text-muted); font-size: 1.25rem; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">${data?.description || ''}</p>`;
 		}
-		appLinks = data?.appLinks || [];
 	}
 } catch (e) {
 	console.error('Error fetching home content:', e);
@@ -55,6 +53,7 @@ try {
 				<h2 style="font-size: 1.5rem; margin-bottom: 2rem;">Admin Panel</h2>
 				<nav class="admin-sidebar">
 					<a href="/admin" class="admin-nav-link active">Dashboard</a>
+					<a href="/admin/apps" class="admin-nav-link">Manage Apps</a>
 					<a href="/admin/policies" class="admin-nav-link">Manage Policies</a>
 					<a href="/admin/settings" class="admin-nav-link">Settings</a>
 				</nav>
@@ -80,13 +79,6 @@ try {
 							<textarea id="homeHtml" class="form-input mb-2" rows="12" required>{homeHtml}</textarea>
 						</div>
 
-						<h3 style="font-size: 1.25rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-primary);">Manage App Links</h3>
-						<p class="text-sm mb-2">The appropriate platform icon will be auto-detected from the URL.</p>
-						<div id="app-links-container" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1rem;">
-							<!-- Dynamic rows added via JS -->
-						</div>
-						<button type="button" id="add-link-btn" class="btn mb-4" style="background: rgba(255,255,255,0.1); border: 1px dashed var(--border-color); color: var(--text-main); width: 100%; box-shadow: none;">+ Add App Link</button>
-
 						<button type="submit" class="btn mt-4">Save All Changes</button>
 						<div id="home-msg" class="text-sm mt-2" style="display: none;"></div>
 					</form>
@@ -94,58 +86,9 @@ try {
 			</div>
 		</main>
 
-		<script is:inline define:vars={{ initialAppLinks: appLinks }}>
+		<script is:inline>
 			const homeForm = document.getElementById('home-form');
 			const homeMsg = document.getElementById('home-msg');
-			const linksContainer = document.getElementById('app-links-container');
-			const addLinkBtn = document.getElementById('add-link-btn');
-
-			let currentLinks = [...initialAppLinks];
-
-			function renderLinks() {
-				linksContainer.innerHTML = '';
-				currentLinks.forEach((link, index) => {
-					const row = document.createElement('div');
-					row.style.display = 'flex';
-					row.style.gap = '10px';
-					row.style.alignItems = 'center';
-
-					row.innerHTML = `
-						<input type="text" class="form-input" placeholder="App Name (e.g. TorrentX)" value="${link.name || ''}" data-index="${index}" data-field="name" required style="flex: 1; padding: 0.75rem;" />
-						<input type="url" class="form-input" placeholder="URL (e.g. https://play.google.com/...)" value="${link.url || ''}" data-index="${index}" data-field="url" required style="flex: 2; padding: 0.75rem;" />
-						<button type="button" class="remove-btn" data-index="${index}" style="background: none; border: none; color: #e53e3e; cursor: pointer; padding: 0.5rem;" aria-label="Remove Link">
-							<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-						</button>
-					`;
-					linksContainer.appendChild(row);
-				});
-
-				// Attach event listeners
-				linksContainer.querySelectorAll('input').forEach(input => {
-					input.addEventListener('input', (e) => {
-						const target = e.target;
-						const index = target.getAttribute('data-index');
-						const field = target.getAttribute('data-field');
-						currentLinks[index][field] = target.value;
-					});
-				});
-
-				linksContainer.querySelectorAll('.remove-btn').forEach(btn => {
-					btn.addEventListener('click', (e) => {
-						const index = e.currentTarget.getAttribute('data-index');
-						currentLinks.splice(index, 1);
-						renderLinks();
-					});
-				});
-			}
-
-			addLinkBtn.addEventListener('click', () => {
-				currentLinks.push({ name: '', url: '' });
-				renderLinks();
-			});
-
-			// Initial render
-			renderLinks();
 
 			homeForm?.addEventListener('submit', async (e) => {
 				e.preventDefault();
@@ -162,7 +105,7 @@ try {
 					const res = await fetch('/api/admin/update-home', {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({ homeHtml, appLinks: currentLinks })
+						body: JSON.stringify({ homeHtml })
 					});
 
 					if (res.ok) {
