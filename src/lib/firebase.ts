@@ -4,7 +4,7 @@ import { getFirestore } from 'firebase-admin/firestore';
 const serviceAccount = {
   type: "service_account",
   project_id: import.meta.env.FIREBASE_PROJECT_ID,
-  private_key_id: import.meta.env.FIREBASE_PRIVATE_KEY_ID || "2c5e22e9d3363f1b439f518d6b09c261baffd7f4",
+  private_key_id: "2c5e22e9d3363f1b439f518d6b09c261baffd7f4",
   private_key: import.meta.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
   client_email: import.meta.env.FIREBASE_CLIENT_EMAIL,
   client_id: "105112983104663358711",
