@@ -187,6 +187,13 @@ a:hover {
   color: var(--accent-primary);
 }
 
+.app-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
 /* Lists */
 .policy-list {
   list-style: none;
