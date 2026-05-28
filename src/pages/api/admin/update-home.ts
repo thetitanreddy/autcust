@@ -9,11 +9,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   try {
-    const { headline, description, appLinks } = await request.json();
+    const { homeHtml, appLinks } = await request.json();
 
     const updateData: any = {
-      headline,
-      description
+      homeHtml
     };
 
     if (Array.isArray(appLinks)) {

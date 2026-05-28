@@ -4,8 +4,8 @@ import '../styles/global.css';
 import { db } from '../lib/firebase';
 import AppLink from '../components/AppLink.astro';
 
-let headline = "AutcustDev";
-let description = "Managing apps like MileMint and TorrentX with a secure, maintenance-free infrastructure.";
+let homeHtml = `<h1 style="font-size: 3.5rem; margin-bottom: 1.5rem;">AutcustDev</h1>
+<p style="color: var(--text-muted); font-size: 1.25rem; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">Managing apps like MileMint and TorrentX with a secure, maintenance-free infrastructure.</p>`;
 let policies: any[] = [];
 
 let appLinks: any[] = [];
@@ -14,8 +14,11 @@ try {
 	const homeDoc = await db.collection('site_content').doc('home').get();
 	if (homeDoc.exists) {
 		const data = homeDoc.data();
-		if (data?.headline) headline = data.headline;
-		if (data?.description) description = data.description;
+		if (data?.homeHtml) {
+			homeHtml = data.homeHtml;
+		} else if (data?.headline && data?.description) {
+			homeHtml = `<h1 style="font-size: 3.5rem; margin-bottom: 1.5rem;">${data.headline}</h1>\n<p style="color: var(--text-muted); font-size: 1.25rem; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">${data.description}</p>`;
+		}
 		if (data?.appLinks) appLinks = data.appLinks;
 	}
 
@@ -162,10 +165,7 @@ try {
 		</nav>
 
 		<main class="container text-center" style="max-width: 1000px; padding: 2rem; margin: auto;">
-			<div style="padding: 4rem 1rem; margin-bottom: 2rem;">
-				<h1 style="font-size: 3.5rem; margin-bottom: 1.5rem;" set:html={headline}></h1>
-				<p style="color: var(--text-muted); font-size: 1.25rem; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;" set:html={description}></p>
-			</div>
+			<div style="padding: 4rem 1rem; margin-bottom: 2rem;" set:html={homeHtml}></div>
 
 		</main>
 

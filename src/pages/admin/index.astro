@@ -22,16 +22,18 @@ try {
 }
 
 // Fetch home content from Firestore
-let headline = '';
-let description = '';
+let homeHtml = '';
 let appLinks: any[] = [];
 
 try {
 	const doc = await db.collection('site_content').doc('home').get();
 	if (doc.exists) {
 		const data = doc.data();
-		headline = data?.headline || '';
-		description = data?.description || '';
+		if (data?.homeHtml) {
+			homeHtml = data.homeHtml;
+		} else if (data?.headline || data?.description) {
+			homeHtml = `<h1 style="font-size: 3.5rem; margin-bottom: 1.5rem;">${data?.headline || ''}</h1>\n<p style="color: var(--text-muted); font-size: 1.25rem; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto;">${data?.description || ''}</p>`;
+		}
 		appLinks = data?.appLinks || [];
 	}
 } catch (e) {
@@ -74,12 +76,8 @@ try {
 					<h2 style="font-size: 1.5rem; margin-bottom: 1rem;">Edit Home Screen Content</h2>
 					<form id="home-form">
 						<div class="form-group">
-							<label class="form-label" for="headline">Headline (HTML supported)</label>
-							<textarea id="headline" class="form-input mb-2" rows="2" required>{headline}</textarea>
-						</div>
-						<div class="form-group mt-4">
-							<label class="form-label" for="description">Description (HTML supported)</label>
-							<textarea id="description" class="form-input mb-2" rows="6" required>{description}</textarea>
+							<label class="form-label" for="homeHtml">Home Page HTML</label>
+							<textarea id="homeHtml" class="form-input mb-2" rows="12" required>{homeHtml}</textarea>
 						</div>
 
 						<h3 style="font-size: 1.25rem; margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-primary);">Manage App Links</h3>
@@ -151,8 +149,7 @@ try {
 
 			homeForm?.addEventListener('submit', async (e) => {
 				e.preventDefault();
-				const headline = document.getElementById('headline').value;
-				const description = document.getElementById('description').value;
+				const homeHtml = document.getElementById('homeHtml').value;
 				
 				const btn = homeForm.querySelector('button[type="submit"]');
 				const ogText = btn ? btn.innerText : '';
@@ -165,7 +162,7 @@ try {
 					const res = await fetch('/api/admin/update-home', {
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({ headline, description, appLinks: currentLinks })
+						body: JSON.stringify({ homeHtml, appLinks: currentLinks })
 					});
 
 					if (res.ok) {
