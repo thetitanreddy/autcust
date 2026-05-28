@@ -8,13 +8,7 @@ let headline = "AutcustDev";
 let description = "Managing apps like MileMint and TorrentX with a secure, maintenance-free infrastructure.";
 let policies: any[] = [];
 
-// You can provide your app links here or move this to Firebase
-const appLinks = [
-	{ name: "TorrentX", url: "https://play.google.com/store/apps/details?id=com.autcust.torrentx" },
-	{ name: "MileMint iOS", url: "https://apps.apple.com/app/milemint" },
-	{ name: "Autcust Desktop", url: "https://apps.microsoft.com/store/detail/autcust" },
-	{ name: "Web Portal", url: "https://autcust.dev" }
-];
+let appLinks: any[] = [];
 
 try {
 	const homeDoc = await db.collection('site_content').doc('home').get();
@@ -22,6 +16,7 @@ try {
 		const data = homeDoc.data();
 		if (data?.headline) headline = data.headline;
 		if (data?.description) description = data.description;
+		if (data?.appLinks) appLinks = data.appLinks;
 	}
 
 	const policiesSnapshot = await db.collection('policies').get();

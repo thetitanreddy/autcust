@@ -9,12 +9,18 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   try {
-    const { headline, description } = await request.json();
+    const { headline, description, appLinks } = await request.json();
 
-    await db.collection('site_content').doc('home').set({
+    const updateData: any = {
       headline,
       description
-    }, { merge: true });
+    };
+
+    if (Array.isArray(appLinks)) {
+      updateData.appLinks = appLinks;
+    }
+
+    await db.collection('site_content').doc('home').set(updateData, { merge: true });
 
     return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (error) {
