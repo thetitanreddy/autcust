@@ -9,6 +9,7 @@ let homeHtml = `<h1 style="font-size: 3.5rem; margin-bottom: 1.5rem;">AutcustDev
 let policies: any[] = [];
 
 let apps: any[] = [];
+let docs: any[] = [];
 
 try {
 	const homeDoc = await db.collection('site_content').doc('home').get();
@@ -23,6 +24,9 @@ try {
 
 	const appsSnapshot = await db.collection('apps').get();
 	apps = appsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+	const docsSnapshot = await db.collection('docs').get();
+	docs = docsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
 	const policiesSnapshot = await db.collection('policies').get();
 	policies = policiesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -152,7 +156,9 @@ try {
 				<div class="divider-small"></div>
 				
 				<div class="menu-label">Documentation</div>
-				<a href="/torrentx-privacy" class="menu-link">TorrentX Privacy Policy</a>
+				{docs.map(doc => (
+					<a href={`/docs/${doc.slug}`} class="menu-link">{doc.title}</a>
+				))}
 				
 				{policies.length > 0 && (
 					<>
