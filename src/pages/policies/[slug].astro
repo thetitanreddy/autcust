@@ -1,5 +1,4 @@
 ---
-import { marked } from 'marked';
 import SEO from '../../components/SEO.astro';
 import '../../styles/global.css';
 import { db } from '../../lib/firebase';
@@ -23,7 +22,7 @@ if (!policy) {
 	return Astro.redirect('/404');
 }
 
-const htmlContent = await marked.parse(policy.content);
+const htmlContent = policy.content;
 const updatedDate = new Date(policy.date).toDateString();
 ---
 
