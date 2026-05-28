@@ -1,11 +1,21 @@
 export const prerender = false;
 
 import type { APIRoute } from 'astro';
-import { SignJWT } from 'jose';
 import nodemailer from 'nodemailer';
+import { db } from '../../../lib/firebase';
 
-export const POST: APIRoute = async ({ cookies }) => {
+export const POST: APIRoute = async ({ request, cookies }) => {
   try {
+    const csrfTokenHeader = request.headers.get('x-csrf-token');
+    const csrfTokenCookie = cookies.get('csrf_token')?.value;
+
+    if (!csrfTokenHeader || !csrfTokenCookie || csrfTokenHeader !== csrfTokenCookie) {
+      return new Response(JSON.stringify({ error: 'CSRF token mismatch' }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
     const adminEmail = import.meta.env.ADMIN_EMAIL;
     const jwtSecret = import.meta.env.JWT_SECRET || 'fallback_secret_for_dev_only';
     
@@ -47,20 +57,11 @@ export const POST: APIRoute = async ({ cookies }) => {
       console.log('====================================');
     }
 
-    // Sign the OTP into a JWT
-    const secret = new TextEncoder().encode(jwtSecret);
-    const jwt = await new SignJWT({ otp })
-      .setProtectedHeader({ alg: 'HS256' })
-      .setExpirationTime('5m')
-      .sign(secret);
-
-    // Set cookie
-    cookies.set('otp_pending', jwt, {
-      path: '/',
-      httpOnly: true,
-      secure: import.meta.env.PROD,
-      sameSite: 'lax',
-      maxAge: 60 * 5, // 5 minutes
+    // Save OTP to Firebase
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+    await db.collection('otps').doc(adminEmail).set({
+      otp,
+      expiresAt
     });
 
     return new Response(JSON.stringify({ success: true, message: 'OTP sent' }), {

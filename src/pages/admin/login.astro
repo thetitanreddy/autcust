@@ -1,12 +1,21 @@
 ---
 import SEO from '../../components/SEO.astro';
 import '../../styles/global.css';
+import crypto from 'node:crypto';
 
 // Check if already logged in
 const sessionCookie = Astro.cookies.get('admin_session');
 if (sessionCookie) {
   return Astro.redirect('/admin');
 }
+
+const csrfToken = crypto.randomUUID();
+Astro.cookies.set('csrf_token', csrfToken, {
+  path: '/',
+  httpOnly: true,
+  secure: import.meta.env.PROD,
+  sameSite: 'lax',
+});
 ---
 
 <html lang="en">
@@ -16,6 +25,7 @@ if (sessionCookie) {
 			description="Secure Admin Login"
 			noindex={true}
 		/>
+		<meta name="csrf-token" content={csrfToken} />
 	</head>
 	<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
 		<main class="container" style="max-width: 450px; padding-top: 10vh;">
@@ -88,9 +98,13 @@ if (sessionCookie) {
 				errorEl.style.display = 'none';
 
 				try {
+					const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement).content;
 					const res = await fetch('/api/auth/request-otp', {
 						method: 'POST',
-						headers: { 'Content-Type': 'application/json' },
+						headers: { 
+							'Content-Type': 'application/json',
+							'X-CSRF-Token': csrfToken
+						},
 						body: JSON.stringify({})
 					});
 
@@ -155,9 +169,13 @@ if (sessionCookie) {
 				btn!.disabled = true;
 
 				try {
+					const csrfToken = (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement).content;
 					const res = await fetch('/api/auth/verify-otp', {
 						method: 'POST',
-						headers: { 'Content-Type': 'application/json' },
+						headers: { 
+							'Content-Type': 'application/json',
+							'X-CSRF-Token': csrfToken
+						},
 						body: JSON.stringify({ otp })
 					});
 
