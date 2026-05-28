@@ -132,6 +132,61 @@ a:hover {
   border-color: rgba(255,255,255,0.3);
 }
 
+.btn-huge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 1.5rem 3rem;
+  background: var(--accent-primary);
+  color: #000000;
+  border-radius: 20px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  box-shadow: 0 8px 25px rgba(244, 240, 230, 0.4);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  text-decoration: none;
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto 1.5rem;
+}
+
+.btn-huge:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 35px rgba(244, 240, 230, 0.6);
+  background: #ffffff;
+}
+
+.btn-huge svg {
+  width: 32px;
+  height: 32px;
+}
+
+.huge-buttons-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 3rem;
+}
+
+.apps-section-title {
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: var(--text-main);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.apps-section-title svg {
+  color: var(--accent-primary);
+}
+
 /* Lists */
 .policy-list {
   list-style: none;

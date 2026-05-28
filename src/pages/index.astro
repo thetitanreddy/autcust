@@ -2,10 +2,19 @@
 import SEO from '../components/SEO.astro';
 import '../styles/global.css';
 import { db } from '../lib/firebase';
+import AppLink from '../components/AppLink.astro';
 
 let headline = "AutcustDev";
 let description = "Managing apps like MileMint and TorrentX with a secure, maintenance-free infrastructure.";
 let policies: any[] = [];
+
+// You can provide your app links here or move this to Firebase
+const appLinks = [
+	{ name: "TorrentX", url: "https://play.google.com/store/apps/details?id=com.autcust.torrentx" },
+	{ name: "MileMint iOS", url: "https://apps.apple.com/app/milemint" },
+	{ name: "Autcust Desktop", url: "https://apps.microsoft.com/store/detail/autcust" },
+	{ name: "Web Portal", url: "https://autcust.dev" }
+];
 
 try {
 	const homeDoc = await db.collection('site_content').doc('home').get();
@@ -70,7 +79,7 @@ try {
 				border: 1px solid var(--border-color);
 				border-radius: 12px;
 				padding: 1.25rem;
-				min-width: 250px;
+				min-width: 280px;
 				opacity: 0;
 				visibility: hidden;
 				transform: translateY(-10px);
@@ -118,7 +127,7 @@ try {
 			}
 		</style>
 	</head>
-	<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; position: relative;">
+	<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; position: relative; padding: 4rem 1rem;">
 		<nav class="hamburger-menu">
 			<input type="checkbox" id="menu-toggle" />
 			<label for="menu-toggle" class="menu-icon">
@@ -135,7 +144,14 @@ try {
 				
 				<div class="divider-small"></div>
 				
-				<div class="menu-label">Apps</div>
+				<div class="menu-label">Our Apps</div>
+				{appLinks.map(app => (
+					<a href={app.url} class="menu-link" target="_blank" rel="noopener noreferrer">{app.name}</a>
+				))}
+
+				<div class="divider-small"></div>
+				
+				<div class="menu-label">Documentation</div>
 				<a href="/torrentx-privacy" class="menu-link">TorrentX Privacy Policy</a>
 				
 				{policies.length > 0 && (
@@ -150,10 +166,35 @@ try {
 			</div>
 		</nav>
 
-		<main class="container text-center" style="max-width: 650px; padding: 2rem;">
-			<div class="glass-panel">
-				<h1 style="font-size: 2.5rem; margin-bottom: 1rem;">{headline}</h1>
-				<p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 0;">{description}</p>
+		<main class="container text-center" style="max-width: 800px; padding: 2rem;">
+			<div class="glass-panel" style="padding: 4rem 3rem;">
+				<h1 style="font-size: 3.5rem; margin-bottom: 1.5rem;">{headline}</h1>
+				<p style="color: var(--text-muted); font-size: 1.25rem; margin-bottom: 2rem;">{description}</p>
+
+				<div class="huge-buttons-container">
+					<a href="/torrentx-privacy" class="btn-huge">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+						Privacy Policy
+					</a>
+					
+					{policies.map(policy => (
+						<a href={`/policies/${policy.slug}`} class="btn-huge">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+							{policy.title}
+						</a>
+					))}
+				</div>
+
+				<h2 class="apps-section-title" style="justify-content: center; margin-top: 3rem;">
+					<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+					Our Apps
+				</h2>
+				<div style="max-width: 450px; margin: 0 auto;">
+					{appLinks.map(app => (
+						<AppLink href={app.url} name={app.name} />
+					))}
+				</div>
+
 			</div>
 		</main>
 	</body>
