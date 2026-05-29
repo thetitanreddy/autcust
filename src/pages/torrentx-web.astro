@@ -183,7 +183,10 @@ import '../styles/global.css';
 			</div>
 
 			<div class="status-panel" id="status-panel">
-                <h3 style="margin-top: 0; font-family: 'Lora', serif; font-size: 1.5rem;" id="torrent-name">Loading...</h3>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                    <h3 style="margin: 0; font-family: 'Lora', serif; font-size: 1.5rem; word-break: break-all; padding-right: 1rem;" id="torrent-name">Loading...</h3>
+                    <button id="btn-pause-resume" style="padding: 0.5rem 1rem; font-size: 0.9rem; display: none;">Pause</button>
+                </div>
 				<div class="stats">
 					<span id="speed-down">⬇ 0 B/s</span>
 					<span id="speed-up">⬆ 0 B/s</span>
@@ -213,6 +216,7 @@ import '../styles/global.css';
 			const torrentIdInput = document.getElementById('torrentId');
 			const btnDownload = document.getElementById('btn-download');
 			const btnWatch = document.getElementById('btn-watch');
+			const btnPauseResume = document.getElementById('btn-pause-resume');
 			const statusPanel = document.getElementById('status-panel');
 			const progressBar = document.getElementById('progress-bar');
 			const progressText = document.getElementById('progress-text');
@@ -227,6 +231,7 @@ import '../styles/global.css';
             const errorMessage = document.getElementById('error-message');
 
             const mediaExtensions = ['.mp4', '.webm', '.mkv', '.ogg', '.mp3', '.wav'];
+            let isPaused = false;
 
 			function formatBytes(bytes, decimals = 2) {
 				if (!+bytes) return '0 B';
@@ -267,6 +272,8 @@ import '../styles/global.css';
                 peersText.textContent = 'Peers: 0';
                 downloadedText.textContent = '0 B / 0 B';
                 timeRemainingText.textContent = '';
+                btnPauseResume.style.display = 'none';
+                isPaused = false;
             }
 
 			function startTorrent(action) {
@@ -289,6 +296,9 @@ import '../styles/global.css';
                     torrentName.textContent = torrent.name || 'Unknown Torrent';
                     btnDownload.disabled = false;
                     btnWatch.disabled = false;
+                    btnPauseResume.style.display = 'block';
+                    btnPauseResume.textContent = 'Pause';
+                    isPaused = false;
 
 					// Find media files
 					const mediaFiles = torrent.files.filter(file => {
@@ -376,6 +386,23 @@ import '../styles/global.css';
 
 			btnDownload.addEventListener('click', () => startTorrent('download'));
 			btnWatch.addEventListener('click', () => startTorrent('watch'));
+
+            btnPauseResume.addEventListener('click', () => {
+                if (!currentTorrent) return;
+                
+                if (isPaused) {
+                    currentTorrent.resume();
+                    isPaused = false;
+                    btnPauseResume.textContent = 'Pause';
+                } else {
+                    currentTorrent.pause();
+                    isPaused = true;
+                    btnPauseResume.textContent = 'Resume';
+                    speedDown.textContent = '⬇ Paused';
+                    speedUp.textContent = '⬆ Paused';
+                    timeRemainingText.textContent = 'Paused';
+                }
+            });
 
             document.getElementById('test-torrent-link').addEventListener('click', (e) => {
                 e.preventDefault();
