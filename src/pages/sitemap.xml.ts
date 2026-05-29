@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { db } from '../../lib/firebase';
+import { db } from '../lib/firebase';
 
 const SITE_URL = 'https://autcust.com';
 
