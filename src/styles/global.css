@@ -273,6 +273,22 @@ a:hover {
 }
 
 /* Markdown Content */
+.markdown-content {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+.markdown-content pre, 
+.markdown-content code {
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-width: 100%;
+  overflow-x: auto;
+}
+.markdown-content img {
+  max-width: 100%;
+  height: auto;
+}
 .markdown-content h1, 
 .markdown-content h2, 
 .markdown-content h3 {
@@ -293,6 +309,7 @@ a:hover {
   margin-bottom: 0.75rem;
   color: var(--text-main);
 }
+
 
 /* Admin Dashboard & OTP */
 .admin-layout {

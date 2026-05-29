@@ -20,6 +20,17 @@ try {
 }
 
 if (!docData) {
+	// Fallback check: Did the user accidentally link to a policy or app using a relative link?
+	try {
+		const policyDoc = await db.collection('policies').doc(slug).get();
+		if (policyDoc.exists) return Astro.redirect(`/policies/${slug}`);
+		
+		const appDoc = await db.collection('apps').doc(slug).get();
+		if (appDoc.exists) return Astro.redirect(`/apps/${slug}`);
+	} catch (e) {
+		console.error('Error in fallback check:', e);
+	}
+
 	return Astro.redirect('/404');
 }
 
@@ -42,7 +53,7 @@ const htmlContent = docData.content;
             <div style="max-width: 860px; margin: 0 auto 10px;">
 			    <BackButton />
             </div>
-			<div set:html={htmlContent}></div>
+			<div class="markdown-content" set:html={htmlContent}></div>
 		</main>
 	</body>
 </html>

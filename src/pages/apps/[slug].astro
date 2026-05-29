@@ -19,6 +19,17 @@ try {
 }
 
 if (!appData) {
+	// Fallback check: Did the user accidentally link to a policy or doc using a relative link?
+	try {
+		const policyDoc = await db.collection('policies').doc(slug).get();
+		if (policyDoc.exists) return Astro.redirect(`/policies/${slug}`);
+		
+		const docFile = await db.collection('docs').doc(slug).get();
+		if (docFile.exists) return Astro.redirect(`/docs/${slug}`);
+	} catch (e) {
+		console.error('Error in fallback check:', e);
+	}
+
 	return Astro.redirect('/404');
 }
 
@@ -44,7 +55,7 @@ const updatedDate = appData.updatedAt ? new Date(appData.updatedAt).toDateString
 				<h1>{appData.name}</h1>
 				<p class="text-sm text-muted">Last updated: {updatedDate}</p>
 				<hr class="divider" />
-				<div class="html-content" set:html={htmlContent}></div>
+				<div class="markdown-content" set:html={htmlContent}></div>
 			</div>
 		</main>
 	</body>

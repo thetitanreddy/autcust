@@ -19,6 +19,17 @@ try {
 }
 
 if (!policy) {
+	// Fallback check: Did the user accidentally link to an app or doc using a relative link?
+	try {
+		const appDoc = await db.collection('apps').doc(slug).get();
+		if (appDoc.exists) return Astro.redirect(`/apps/${slug}`);
+		
+		const docFile = await db.collection('docs').doc(slug).get();
+		if (docFile.exists) return Astro.redirect(`/docs/${slug}`);
+	} catch (e) {
+		console.error('Error in fallback check:', e);
+	}
+
 	return Astro.redirect('/404');
 }
 
