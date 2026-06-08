@@ -30,7 +30,7 @@ const db = getFirestore();
 async function migrate() {
     console.log("Migrating home content...");
     await db.collection("site_content").doc("home").set({
-        headline: "AutcustDev",
+        headline: "Autcust",
         description: "Managing apps like MileMint and TorrentX with a secure, maintenance-free infrastructure."
     });
 
