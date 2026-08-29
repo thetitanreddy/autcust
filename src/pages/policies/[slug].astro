@@ -46,7 +46,10 @@ const updatedDate = new Date(policy.date).toDateString();
 		/>
 
 		<!-- Analytics -->
-		<script defer src="/_vercel/insights/script.js"></script>
+		<script>
+			import { inject } from '@vercel/analytics';
+			inject();
+		</script>
 	</head>
 	<body>
 		<main class="container">

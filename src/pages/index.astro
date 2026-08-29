@@ -43,7 +43,10 @@ try {
 		/>
 
 		<!-- Analytics -->
-		<script defer src="/_vercel/insights/script.js"></script>
+		<script>
+			import { inject } from '@vercel/analytics';
+			inject();
+		</script>
 		<style>
 			.hamburger-menu {
 				position: fixed;

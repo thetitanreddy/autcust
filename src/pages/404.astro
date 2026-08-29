@@ -12,7 +12,10 @@ import BackButton from '../components/BackButton.astro';
 		<meta name="robots" content="noindex" />
 		
 		<!-- Analytics -->
-		<script defer src="/_vercel/insights/script.js"></script>
+		<script>
+			import { inject } from '@vercel/analytics';
+			inject();
+		</script>
 	</head>
 	<body>
 		<main class="container text-center">

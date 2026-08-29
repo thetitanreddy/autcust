@@ -46,7 +46,10 @@ const htmlContent = docData.content;
 		/>
 
 		<!-- Analytics -->
-		<script defer src="/_vercel/insights/script.js"></script>
+		<script>
+			import { inject } from '@vercel/analytics';
+			inject();
+		</script>
 	</head>
 	<body>
 		<main style="padding: 20px;">
