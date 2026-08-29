@@ -122,3 +122,5 @@ media.net, 8cu675n41, RESELLER
 indexexchange.com, 214183, RESELLER, 50b1c356f2c5c8fc
 video.unrulymedia.com, 657436911, RESELLER
 smaato.com, 1100047589, RESELLER, 07bcf65f187117b4
+
+facebook.com, 1619044946287930, DIRECT, c3e20eee3f780d68
