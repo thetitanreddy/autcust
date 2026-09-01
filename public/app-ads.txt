@@ -1,7 +1,5 @@
 google.com,pub-5941450050642369,DIRECT,f08c47fec0942fa0
 
-google.com, pub-5941450050642369, DIRECT, f08c47fec0942fa0
-
 pubmatic.com, 95054, RESELLER, 5d62403b186f2ace
 brightmountainmedia.com, 2686958, RESELLER
 pubmatic.com, 165438, RESELLER, 5d62403b186f2ace
